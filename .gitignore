@@ -12,3 +12,11 @@ linux/bin
 
 # build files
 *.gz
+
+# IDE files
+.idea/*
+
+# MISC
+cmake-build-debug/*
+Makefile
+linux/.release_time
