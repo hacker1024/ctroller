@@ -1,6 +1,6 @@
-# ctroller
+# ctroller-android
 
-*ctroller* lets you use your 3DS as an input device for your Linux system via
+*ctroller-android* lets you use your 3DS as an input device for your ~~Linux~~ Android system via
 the uinput kernel module. It consists of a client that runs on your 3DS,
 continously streaming the 3DS input data to a server on your PC. The server
 exposes a virtual device to your system, interpretes the data it receives and
@@ -66,12 +66,14 @@ To build the android binary, run `CC=path/to/th/android/cross/compiler make`. re
 
 ## Running
 
-Start the server by running:
+Run the ELF binary manually or use my android app: https://github.com/hacker1024/ctroller-android-app
+
+Start the ELF binary manually by copying to a executable location (like /data/local/tmp/) and running:
 ```bash
-$ ./linux/ctroller
+$ ./ctroller
 ```
 
-Usage:
+Flags if you manually run the binary:
 ```
   -d  --daemonize              execute in background
   -h  --help                   print this help text
@@ -79,7 +81,7 @@ Usage:
   -u  --uinput-device=<path>   uinput character device (defaults to /dev/uinput)
 ```
 
-Then launch the *ctroller.3dsx* application on your 3DS using a homebrew
+Then launch the *ctroller.3dsx* or *ctroller.cia* application on your 3DS using a homebrew
 launcher of your choice.
 
 For development purposes, the 3DS-Makefile includes a `run` target that uses
