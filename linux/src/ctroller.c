@@ -38,7 +38,7 @@ socklen_t listen_addr_len;
 
 int ctroller_init(const char *uinput_device, const char *port)
 {
-    puts("Initializing ctroller version " CTROLLER_VERSION_STRING ".");
+    puts("Initializing ctroller-android version " CTROLLER_VERSION_STRING ".");
     int res;
     if ((res = ctroller_listener_init(port)) < 0) {
         fprintf(stderr, "Failed to initialize listener.\n");
