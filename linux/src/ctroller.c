@@ -25,21 +25,18 @@ static struct {
     struct device_context *devices[DEVICES_COUNT];
 } ctroller = {
     .socket = -1,
-    .devices =
-        {
-            [DEVICE_GAMEPAD]       = &device_gamepad,
-            [DEVICE_TOUCHSCREEN]   = &device_touchscreen,
-            [DEVICE_GYROSCOPE]     = &device_gyroscope,
-            [DEVICE_ACCELEROMETER] = &device_accelerometer,
-        },
+    .devices = {
+        &device_gamepad,
+        &device_touchscreen,
+        &device_gyroscope,
+        &device_accelerometer,
+    },
 };
 
 struct sockaddr listen_addr;
 socklen_t listen_addr_len;
 
-int ctroller_init(const char *uinput_device,
-                  const char *port,
-                  device_mask_t device_mask)
+int ctroller_init(const char *uinput_device, const char *port)
 {
     puts("Initializing ctroller version " CTROLLER_VERSION_STRING ".");
     int res;
@@ -48,7 +45,7 @@ int ctroller_init(const char *uinput_device,
         return res;
     }
 
-    if ((res = ctroller_uinput_init(uinput_device, device_mask)) < 0) {
+    if ((res = ctroller_uinput_init(uinput_device)) < 0) {
         fprintf(stderr, "Failed to create virtual device.\n");
         ctroller_exit();
         return res;
@@ -111,27 +108,22 @@ int ctroller_listener_init(const char *port)
     return 0;
 }
 
-int ctroller_uinput_init(const char *uinput_device, device_mask_t device_mask)
+int ctroller_uinput_init(const char *uinput_device)
 {
     if (uinput_device == NULL) {
         uinput_device = UINPUT_DEFAULT_DEVICE;
     }
 
     for (size_t i = 0; i < arrsize(ctroller.devices); i++) {
-        if (device_mask & (1 << i)) {
-
-            fprintf(stderr, "initializing device DEVICE_ID=%zu...\n", i);
-
-            int fd = ctroller.devices[i]->create(uinput_device);
-            if (fd < 0) {
-                for (size_t j = 0; j < i; j++) {
-                    close(ctroller.devices[j]->fd);
-                    ctroller.devices[j]->fd = -1;
-                }
-                return -1;
+        int fd = ctroller.devices[i]->create(uinput_device);
+        if (fd < 0) {
+            for (size_t j = 0; j < i; j++) {
+                close(ctroller.devices[j]->fd);
+                ctroller.devices[j]->fd = -1;
             }
-            ctroller.devices[i]->fd = fd;
+            return -1;
         }
+        ctroller.devices[i]->fd = fd;
     }
 
     return 0;
@@ -236,10 +228,7 @@ inline int ctroller_unpack_hid_info(unsigned char *sendbuf, struct hidinfo *hid)
 int ctroller_write_hid_info(struct hidinfo *hid)
 {
     for (size_t i = 0; i < arrsize(ctroller.devices); i++) {
-        int devfd = ctroller.devices[i]->fd;
-        if (devfd != -1) {
-            ctroller.devices[i]->write(devfd, hid);
-        }
+        ctroller.devices[i]->write(ctroller.devices[i]->fd, hid);
     }
     return 0;
 }
