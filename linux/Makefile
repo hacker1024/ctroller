@@ -10,7 +10,7 @@ SRC_PATH = src
 # Space-separated pkg-config libraries used by this project
 LIBS =
 # General compiler flags
-COMPILE_FLAGS = -Wall -Wextra -fstrict-aliasing -std=gnu11
+COMPILE_FLAGS = -Wall -Wextra -fstrict-aliasing -std=gnu11 -fPIE -fPIC
 # Additional release-specific flags
 RCOMPILE_FLAGS = -D NDEBUG -O2 
 # Additional debug-specific flags
@@ -18,7 +18,7 @@ DCOMPILE_FLAGS = -D DEBUG -g -Og
 # Add additional include paths
 INCLUDES = -I include/
 # General linker settings
-LINK_FLAGS = 
+LINK_FLAGS = -pie
 # Additional release-specific linker settings
 RLINK_FLAGS = 
 # Additional debug-specific linker settings
