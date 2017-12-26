@@ -31,6 +31,8 @@
 #include "ctroller.h"
 #include "hid.h"
 
+#include <string.h>
+
 void on_terminate(int signum)
 {
     (void) signum;
@@ -42,7 +44,7 @@ void on_terminate(int signum)
 void print_usage(void)
 {
     printf("Usage:\n");
-    printf("  %s [<switches>]\n", program_invocation_short_name);
+    printf("  %s [<switches>]\n", "ctroller");
     printf("\n");
 
     printf("<switches>:\n");
@@ -112,7 +114,7 @@ int main(int argc, char *argv[])
     }
 
     if (options.daemonize) {
-        printf("Daemonizing %s...\n", program_invocation_short_name);
+        printf("Daemonizing %s...\n", "ctroller");
         res = daemon(1, 1);
         if (res == -1) {
             perror("Failed to daemonize process");
