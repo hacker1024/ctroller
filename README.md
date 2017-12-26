@@ -2,7 +2,7 @@
 
 *ctroller-android* lets you use your 3DS as an input device for your ~~Linux~~ Android system via
 the uinput kernel module. It consists of a client that runs on your 3DS,
-continously streaming the 3DS input data to a server on your PC. The server
+continously streaming the 3DS input data to a server on your Android device. The server
 exposes a virtual device to your system, interpretes the data it receives and
 writes it to a event node under `/dev/input/event*` or similar.
 
