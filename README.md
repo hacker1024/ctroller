@@ -25,27 +25,13 @@ $ modprobe uinput
 
 ## Building
 
-Run `make` to build both components, or enter either of the `3DS`/`linux`
-subdirectories to build them individually by running `make` there. You can use
-the `debug` target for development.
+To build the 3DS app, run `make` in the "3DS" directory.
+
+To build the android binary, run `CC=path/to/th/android/cross/compiler make`. replace the path with the patch to your android cross compiler (the gcc binary).
 
 ## Installation
+1. Download and run the ELF binary manually or use my android app: https://github.com/hacker1024/ctroller-android-app
 
-If you are using Arch Linux, install
-[ctroller-git](https://aur.archlinux.org/packages/ctroller-git/) from the AUR.
-Or use [ctroller-bin](https://aur.archlinux.org/packages/ctroller-bin/) if you
-do not want to set up the 3DS toolchain.
-
-1. Install the server to your system by running `make install`. This is
-   equivalent to:
-   ```bash
-   $ cd linux
-   $ make install DESTDIR="" BINDIR="/usr/bin"
-   ```
-
-   You can set `DESTDIR` to a install to a different location, i.e.
-   `make DESTDIR="/my/fakeroot/environment"` installs *ctroller* in
-   `/my/fakeroot/environment/usr/bin`.
 
 2. Download the [latest release of the 3DS
    binaries](https://github.com/phijor/ctroller/releases/latest).
