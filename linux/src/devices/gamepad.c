@@ -42,8 +42,8 @@ static const struct uinput_user_dev gamepad = {
 static const uint16_t keys[] = {
     BTN_EAST,
     BTN_SOUTH,
-    BTN_NORTH,
     BTN_WEST,
+    BTN_NORTH,
 
     BTN_START,
     BTN_SELECT,
@@ -69,11 +69,11 @@ static const uint32_t keymasks[] = {
     HID_KEY_START,
     HID_KEY_SELECT,
 
-    HID_KEY_L,
-    HID_KEY_R,
-
     HID_KEY_ZL,
     HID_KEY_ZR,
+
+    HID_KEY_L,
+    HID_KEY_R,
 
     HID_KEY_DUP,
     HID_KEY_DDOWN,
