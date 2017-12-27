@@ -20,3 +20,9 @@ linux/bin
 cmake-build-debug/*
 Makefile
 linux/.release_time
+cmake-build-android/*
+linux/cmake-build-debug/*
+linux/cmake-build-android/*
+CMakeLists.txt
+linux/.idea/*
+linux/CMakeLists.txt
