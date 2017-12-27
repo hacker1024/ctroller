@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    if (signal(SIGINT, on_terminate) == SIG_ERR) {
+    if (bsd_signal(SIGINT, on_terminate) == SIG_ERR) {
         fprintf(stderr, "Failed to register SIGINT handler.\n");
     }
 
