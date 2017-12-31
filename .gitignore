@@ -26,3 +26,9 @@ linux/cmake-build-android/*
 CMakeLists.txt
 linux/.idea/*
 linux/CMakeLists.txt
+nbproject/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
