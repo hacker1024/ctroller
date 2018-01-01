@@ -31,8 +31,6 @@
 #include "ctroller.h"
 #include "hid.h"
 
-#include <string.h>
-
 void on_terminate(int signum)
 {
     (void) signum;
@@ -60,6 +58,7 @@ void print_usage(void)
               "uinput-device=<path>",
               "uinput character "
               "device (defaults to " UINPUT_DEFAULT_DEVICE ")\n");
+    print_opt("k", "keymap", "use a keymap file (if not set, ctroller will use the default keymap)\n");
 #undef print_opt
 }
 
@@ -72,10 +71,12 @@ int main(int argc, char *argv[])
         char *uinput_device;
         char *port;
         int daemonize;
+        char *keymap;
     } options = {
         .uinput_device = NULL,
         .port          = NULL,
         .daemonize     = 0,
+        .keymap = NULL,
     };
 
     static const struct option optstrings[] = {
@@ -83,13 +84,14 @@ int main(int argc, char *argv[])
         {"help",            no_argument,       NULL, 'h'},
         {"port",            required_argument, NULL, 'p'},
         {"uinput-device",   required_argument, NULL, 'u'},
+        {"keymap",          required_argument,       NULL, 'k'},
         {NULL,              0,                 NULL, 0},
     };
     // clang-format on
 
     int index = 0;
     int curopt;
-    while ((curopt = getopt_long(argc, argv, "dhp:u:", optstrings, &index)) !=
+    while ((curopt = getopt_long(argc, argv, "dhp:u:k:", optstrings, &index)) !=
            -1) {
         switch (curopt) {
         case 0:
@@ -106,6 +108,10 @@ int main(int argc, char *argv[])
         case 'u':
             options.uinput_device = optarg;
             printf("uinput device: %s\n", optarg);
+            break;
+        case 'k':
+            options.keymap = optarg;
+            printf("Keymap file: %s\n", optarg);
             break;
         case '?':
             print_usage();
