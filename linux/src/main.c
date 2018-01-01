@@ -42,7 +42,7 @@ void on_terminate(int signum)
 void print_usage(void)
 {
     printf("Usage:\n");
-    printf("  %s [<switches>]\n", "ctroller");
+    printf("  %s [<switches>]\n", "ctroller-android");
     printf("\n");
 
     printf("<switches>:\n");
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     }
 
     if (options.daemonize) {
-        printf("Daemonizing %s...\n", "ctroller");
+        printf("Daemonizing %s...\n", "ctroller-android");
         res = daemon(1, 1);
         if (res == -1) {
             perror("Failed to daemonize process");
