@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <linux/uinput.h>
 
@@ -39,18 +40,18 @@ static const struct uinput_user_dev gamepad = {
     .absfuzz[ABS_RY] = 3,
 };
 
-static const uint16_t keys[] = {
-    BTN_EAST,
+static uint16_t keys[] = {
     BTN_SOUTH,
-    BTN_WEST,
+    BTN_EAST,
     BTN_NORTH,
-
+    BTN_WEST,
+    
     BTN_START,
     BTN_SELECT,
 
     BTN_TL,
     BTN_TR,
-
+    
     BTN_TL2,
     BTN_TR2,
 
@@ -69,11 +70,11 @@ static const uint32_t keymasks[] = {
     HID_KEY_START,
     HID_KEY_SELECT,
 
-    HID_KEY_ZL,
-    HID_KEY_ZR,
-
     HID_KEY_L,
     HID_KEY_R,
+    
+    HID_KEY_ZL,
+    HID_KEY_ZR,
 
     HID_KEY_DUP,
     HID_KEY_DDOWN,
@@ -98,6 +99,60 @@ struct device_context device_gamepad = {
     gamepad_write,
     gamepad_create,
 };
+
+void load_keymap(const char *keymap_file_path) {
+    printf("Loading keymap from file: %s\n", keymap_file_path);
+    
+    FILE *keymap_file = fopen(keymap_file_path, "r");
+    if(keymap_file == NULL) {
+        fprintf(stderr, "Keymap file does not exist.\nReverting to default keymap.\n\n");
+        return;
+    }
+    
+    char c;
+    int count = 0;
+    while(1) {
+        c = fgetc(keymap_file);
+        if (c == '\n') count++;
+        if( feof(keymap_file) ) { 
+           break;
+        }
+    }
+    rewind(keymap_file);
+    if (count != 14) {
+    fprintf(stderr, "Keymap file has an invalaid number of lines.\nPlease make sure you have mapped every key.\nReverting to default keymap.\n\n");
+    return;
+    }
+    
+    int i = 0;
+    char buf[8];
+    while (fgets(buf, sizeof(buf), keymap_file) != NULL) {
+        buf[strlen(buf) - 1] = '\0'; // eat the newline fgets() stores
+        
+        printf("%hu -> \0", keys[i]);
+        
+        if (strcmp(buf, "A") == 0) keys[i] = BTN_SOUTH;
+        if (strcmp(buf, "B") == 0) keys[i] = BTN_EAST;
+        if (strcmp(buf, "X") == 0) keys[i] = BTN_NORTH;
+        if (strcmp(buf, "Y") == 0) keys[i] = BTN_WEST;
+        if (strcmp(buf, "START") == 0) keys[i] = BTN_START;
+        if (strcmp(buf, "SELECT") == 0) keys[i] = BTN_SELECT;
+        if (strcmp(buf, "ZL") == 0) keys[i] = BTN_TL2;
+        if (strcmp(buf, "ZR") == 0) keys[i] = BTN_TR2;
+        if (strcmp(buf, "L") == 0) keys[i] = BTN_TL;
+        if (strcmp(buf, "R") == 0) keys[i] = BTN_TR;
+        if (strcmp(buf, "UP") == 0) keys[i] = BTN_DPAD_UP;
+        if (strcmp(buf, "DOWN") == 0) keys[i] = BTN_DPAD_DOWN;
+        if (strcmp(buf, "LEFT") == 0) keys[i] = BTN_DPAD_LEFT;
+        if (strcmp(buf, "DRIGHT") == 0) keys[i] = BTN_DPAD_RIGHT;
+        
+        printf("%hu\n", keys[i]);
+        
+        i++;
+    }
+    
+    printf("Keymap file loaded.\n");
+}
 
 int gamepad_create(const char *uinput_device)
 {
@@ -175,3 +230,4 @@ int gamepad_write(int uinputfd, struct hidinfo *hid)
     }
     return res;
 }
+

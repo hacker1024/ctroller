@@ -111,7 +111,6 @@ int main(int argc, char *argv[])
             break;
         case 'k':
             options.keymap = optarg;
-            printf("Keymap file: %s\n", optarg);
             break;
         case '?':
             print_usage();
@@ -127,10 +126,13 @@ int main(int argc, char *argv[])
         }
     }
 
+    if(options.keymap != NULL) load_keymap(options.keymap);
+    
     if (ctroller_init(options.uinput_device, options.port) == -1) {
         perror("Error initializing ctroller");
         exit(EXIT_FAILURE);
     }
+    
 
     if (signal(SIGINT, on_terminate) == SIG_ERR) {
         fprintf(stderr, "Failed to register SIGINT handler.\n");
