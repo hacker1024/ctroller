@@ -151,6 +151,7 @@ void load_keymap(const char *keymap_file_path) {
         i++;
     }
     
+    fclose(keymap_file);
     printf("Keymap file loaded.\n");
 }
 
