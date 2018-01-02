@@ -111,7 +111,7 @@ To modify it, copy the above into a file, and swap keys around. The order is ver
 
 To use this keymap with ctroller-android, use the -k option (see above).
 
-For example, I prefer my layout to be more like an xbox, for better compatibility with games. To do this, I swap A and B; X and Y; R and ZR; and L and ZL. Here's my keymap file:
+For example, I prefer my layout to be more like an xbox, for better compatibility with games. To do this, I swap `A` and `B`; `X` and `Y`; `R` and `ZR`; and `L` and `ZL`. Here's my keymap file:
 ```
 B
 A
