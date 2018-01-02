@@ -100,15 +100,24 @@ struct device_context device_gamepad = {
     gamepad_create,
 };
 
+// This function loads the keymap into memory.
 void load_keymap(const char *keymap_file_path) {
     printf("Loading keymap from file: %s\n", keymap_file_path);
     
+    // Opens the specified keymap file and saves the reference in a pointer
     FILE *keymap_file = fopen(keymap_file_path, "r");
+    
+    // Here we make sure the keymap file actually exists.
     if(keymap_file == NULL) {
         fprintf(stderr, "Keymap file does not exist.\nReverting to default keymap.\n\n");
         return;
     }
     
+    /* This bit of code counts the amount of lines in the keymap file, and makes sure there are 14.
+     * It checks each character in turn, and increments "count" for every newline.
+     * The loop breaks when it hits an EOF.
+     * The stream postition indicator is then reset to the beginning of the file.
+     */
     char c;
     int count = 0;
     while(1) {
@@ -124,6 +133,15 @@ void load_keymap(const char *keymap_file_path) {
     return;
     }
     
+    /* This is where the keymap is actally loaded from the file into an array.
+     * Using a ton of if statements probably isn't the best way to do it, but
+     * I don't know any other way.
+     * 
+     * The file gets read line by line, and if the line matches any button, that
+     * button gets added to the keys array.
+     * 
+     * Have a look at the gamepad_write function to see why this works.
+     */
     int i = 0;
     char buf[8];
     while (fgets(buf, sizeof(buf), keymap_file) != NULL) {
@@ -151,6 +169,7 @@ void load_keymap(const char *keymap_file_path) {
         i++;
     }
     
+    // Now the keymap file gets closed, we don't need it any more.
     fclose(keymap_file);
     printf("Keymap file loaded.\n");
 }
@@ -192,6 +211,11 @@ int gamepad_write(int uinputfd, struct hidinfo *hid)
     int res;
     static struct input_event events[NUMEVENTS];
 
+    /* The uinput code written is in the same index as the 3DS event code recieved
+    *  (the 3ds event codes are in the keymasks array, and the uinput ones in keys.)
+    *  This is how the keymapping can be changed from a configuration file - the
+    *  order of the keys array is changed accordingly.
+    */
     size_t i = 0;
     for (; i < arrsize(keys); i++) {
         events[i].type = EV_KEY;

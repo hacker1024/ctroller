@@ -126,6 +126,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    // If the keymap file is specified, load it.
     if(options.keymap != NULL) load_keymap(options.keymap);
     
     if (ctroller_init(options.uinput_device, options.port) == -1) {
