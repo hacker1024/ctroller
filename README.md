@@ -4,7 +4,7 @@
 the uinput kernel module. It consists of a client that runs on your 3DS,
 continously streaming the 3DS input data to a server on your Android device. The server
 exposes a virtual device to your system, interpretes the data it receives and
-writes it to a event node under `/dev/input/event*` or similar.
+writes it to a event node under `/dev/input/event*` or similar. The kernel gamepad input documentation can be found here: https://www.kernel.org/doc/Documentation/input/gamepad.txt
 
 ## Prerequisites
 
@@ -79,6 +79,7 @@ Flags if you manually run the binary:
   -h  --help                   print this help text
   -p  --port=<num>             listen on port 'num' (defaults to 15708)
   -u  --uinput-device=<path>   uinput character device (defaults to /dev/uinput)
+  -k  --keymap                 use a keymap file (if not set, ctroller will use the default keymap)
 ```
 
 Then launch the *ctroller.3dsx* or *ctroller.cia* application on your 3DS using a homebrew
@@ -86,6 +87,48 @@ launcher of your choice.
 
 For development purposes, the 3DS-Makefile includes a `run` target that uses
 `3dslink` to upload and run the application using the Homebrew Menu NetLoader.
+
+## Creating your own keymap file
+To remap the buttons in a way you want, you need to create a file with a button label on each line.
+The default mapping is this:
+```
+A
+B
+X
+Y
+START
+SELECT
+L
+R
+ZL
+ZR
+UP
+DOWN
+LEFT
+RIGHT
+```
+To modify it, copy the above into a file, and swap keys around. The order is very important; any key in your custom keymap will override the default one on the same line.
+
+To use this keymap with ctroller-android, use the -k option (see above).
+
+For example, I prefer my layout to be more like an xbox, for better compatibility with games. To do this, I swap A and B; X and Y; R and ZR; and L and ZL. Here's my keymap file:
+```
+B
+A
+Y
+X
+START
+SELECT
+ZL
+ZR
+L
+R
+UP
+DOWN
+LEFT
+RIGHT
+
+```
 
 ## Notes
 
