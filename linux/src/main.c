@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
         .uinput_device = NULL,
         .port          = NULL,
         .daemonize     = 0,
-        .keymap = NULL,
+        .keymap        = NULL,
     };
 
     static const struct option optstrings[] = {
