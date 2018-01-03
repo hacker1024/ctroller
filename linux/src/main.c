@@ -51,7 +51,7 @@ void print_usage(void)
 
     print_opt("d", "daemonize", "execute in background\n");
     print_opt("h", "help", "print this help text\n");
-    print_opt("k", "keymap", "use a keymap file (if not set, ctroller will use the default keymap)\n");
+    print_opt("k", "keymap=<path>", "use a keymap file (if not set, ctroller will use the default keymap)\n");
     print_opt("p",
               "port=<num>",
               "listen on port 'num' (defaults to " PORT_DEFAULT ")\n");
@@ -59,6 +59,7 @@ void print_usage(void)
               "uinput-device=<path>",
               "uinput character "
               "device (defaults to " UINPUT_DEFAULT_DEVICE ")\n");
+    print_opt("v", )
 #undef print_opt
 }
 
