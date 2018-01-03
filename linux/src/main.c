@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
         {"help",            no_argument,       NULL, 'h'},
         {"port",            required_argument, NULL, 'p'},
         {"uinput-device",   required_argument, NULL, 'u'},
-        {"keymap",          required_argument,       NULL, 'k'},
+        {"keymap",          required_argument, NULL, 'k'},
         {NULL,              0,                 NULL, 0},
     };
     // clang-format on
