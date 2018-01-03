@@ -59,7 +59,7 @@ void print_usage(void)
               "uinput-device=<path>",
               "uinput character "
               "device (defaults to " UINPUT_DEFAULT_DEVICE ")\n");
-    print_opt("v", )
+    print_opt("v", "version", "prints ctroller version\n");
 #undef print_opt
 }
 
@@ -73,11 +73,13 @@ int main(int argc, char *argv[])
         char *port;
         int daemonize;
         char *keymap;
+        int version;
     } options = {
         .uinput_device = NULL,
         .port          = NULL,
         .daemonize     = 0,
         .keymap        = NULL,
+        .version       = 0,
     };
 
     static const struct option optstrings[] = {
@@ -86,13 +88,14 @@ int main(int argc, char *argv[])
         {"port",            required_argument, NULL, 'p'},
         {"uinput-device",   required_argument, NULL, 'u'},
         {"keymap",          required_argument, NULL, 'k'},
+        {"version",         no_argument,       NULL, 'v'},
         {NULL,              0,                 NULL, 0},
     };
     // clang-format on
 
     int index = 0;
     int curopt;
-    while ((curopt = getopt_long(argc, argv, "dhp:u:k:", optstrings, &index)) !=
+    while ((curopt = getopt_long(argc, argv, "dhp:u:k:v", optstrings, &index)) !=
            -1) {
         switch (curopt) {
         case 0:
@@ -113,12 +116,20 @@ int main(int argc, char *argv[])
         case 'k':
             options.keymap = optarg;
             break;
+        case 'v':
+            options.version = 1;
+            break;
         case '?':
             print_usage();
             return EXIT_FAILURE;
         }
     }
 
+    if (options.version) {
+        printf("android-%s\n", CTROLLER_VERSION_STRING);
+        exit(EXIT_SUCCESS);
+    }
+    
     if (options.daemonize) {
         printf("Daemonizing %s...\n", "ctroller-android");
         res = daemon(1, 1);
