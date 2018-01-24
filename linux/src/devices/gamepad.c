@@ -128,7 +128,7 @@ void load_keymap(const char *keymap_file_path) {
         }
     }
     rewind(keymap_file);
-    if (count != 14) {
+    if (count != arrsize(keys)) {
     fprintf(stderr, "Keymap file has an invalaid number of lines.\nPlease make sure you have mapped every key.\nReverting to default keymap.\n\n");
     return;
     }
