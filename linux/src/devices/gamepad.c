@@ -38,6 +38,17 @@ static const struct uinput_user_dev gamepad = {
     .absmax[ABS_RY]  = 0x9c,
     .absflat[ABS_RY] = 10,
     .absfuzz[ABS_RY] = 3,
+    
+    // Analogue DPAD
+    .absmin[ABS_HAT0X] = -1,
+    .absmax[ABS_HAT0X] = 1,
+    .absflat[ABS_HAT0X] = 0,
+    .absfuzz[ABS_HAT0X] = 0,
+    
+    .absmin[ABS_HAT0Y] = -1,
+    .absmax[ABS_HAT0Y] = 1,
+    .absflat[ABS_HAT0Y] = 0,
+    .absfuzz[ABS_HAT0Y] = 0,
 };
 
 static uint16_t keys[] = {
@@ -55,10 +66,11 @@ static uint16_t keys[] = {
     BTN_TL2,
     BTN_TR2,
 
-    BTN_DPAD_UP,
-    BTN_DPAD_DOWN,
-    BTN_DPAD_LEFT,
-    BTN_DPAD_RIGHT,
+    // We now send analogue dpad signals, instead of digital, due to a bug in android.
+//    BTN_DPAD_UP,
+//    BTN_DPAD_DOWN,
+//    BTN_DPAD_LEFT,
+//    BTN_DPAD_RIGHT,
 };
 
 static const uint32_t keymasks[] = {
@@ -76,10 +88,11 @@ static const uint32_t keymasks[] = {
     HID_KEY_ZL,
     HID_KEY_ZR,
 
-    HID_KEY_DUP,
-    HID_KEY_DDOWN,
-    HID_KEY_DLEFT,
-    HID_KEY_DRIGHT,
+    // We now send analogue dpad signals, instead of digital, due to a bug in android.
+//    HID_KEY_DUP,
+//    HID_KEY_DDOWN,
+//    HID_KEY_DLEFT,
+//    HID_KEY_DRIGHT,
 };
 
 static const uint16_t axis[] = {
@@ -90,6 +103,10 @@ static const uint16_t axis[] = {
     // C-Stick
     ABS_RX,
     ABS_RY,
+    
+    // DPAD
+    ABS_HAT0X,
+    ABS_HAT0Y,
 };
 
 #define NUMEVENTS (arrsize(keys) + arrsize(axis) + 1)
@@ -159,10 +176,13 @@ void load_keymap(const char *keymap_file_path) {
         if (strcmp(buf, "ZR") == 0) keys[i] = BTN_TR2;
         if (strcmp(buf, "L") == 0) keys[i] = BTN_TL;
         if (strcmp(buf, "R") == 0) keys[i] = BTN_TR;
-        if (strcmp(buf, "UP") == 0) keys[i] = BTN_DPAD_UP;
-        if (strcmp(buf, "DOWN") == 0) keys[i] = BTN_DPAD_DOWN;
-        if (strcmp(buf, "LEFT") == 0) keys[i] = BTN_DPAD_LEFT;
-        if (strcmp(buf, "DRIGHT") == 0) keys[i] = BTN_DPAD_RIGHT;
+        
+        // We now send analogue dpad signals, instead of digital, due to a bug in android.
+        // This makes it harder to map the dpad buttons, I'll have to think of a way to get around this.
+//        if (strcmp(buf, "UP") == 0) keys[i] = BTN_DPAD_UP;
+//        if (strcmp(buf, "DOWN") == 0) keys[i] = BTN_DPAD_DOWN;
+//        if (strcmp(buf, "LEFT") == 0) keys[i] = BTN_DPAD_LEFT;
+//        if (strcmp(buf, "DRIGHT") == 0) keys[i] = BTN_DPAD_RIGHT;
         
         printf("%hu\n", keys[i]);
         
@@ -242,6 +262,32 @@ int gamepad_write(int uinputfd, struct hidinfo *hid)
     events[i].type  = EV_ABS;
     events[i].code  = ABS_RY;
     events[i].value = -hid->cstick.dy;
+    i++;
+    
+    events[i].type  = EV_ABS;
+    events[i].code  = ABS_HAT0X;
+    if (HID_HAS_KEY(hid->keys.held | hid->keys.down, HID_KEY_DLEFT)) {
+        events[i].value = -1;
+    } else {
+        if (HID_HAS_KEY(hid->keys.held | hid->keys.down, HID_KEY_DRIGHT)) {
+            events[i].value = 1;
+        } else {
+            events[i].value = 0;
+        }
+    }
+    i++;
+    
+    events[i].type  = EV_ABS;
+    events[i].code  = ABS_HAT0Y;
+    if (HID_HAS_KEY(hid->keys.held | hid->keys.down, HID_KEY_DUP)) {
+        events[i].value = -1;
+    } else {
+        if (HID_HAS_KEY(hid->keys.held | hid->keys.down, HID_KEY_DDOWN)) {
+            events[i].value = 1;
+        } else {
+            events[i].value = 0;
+        }
+    }
     i++;
 
     events[i].type  = EV_SYN;
