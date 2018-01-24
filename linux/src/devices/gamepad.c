@@ -264,6 +264,7 @@ int gamepad_write(int uinputfd, struct hidinfo *hid)
     events[i].value = -hid->cstick.dy;
     i++;
     
+    // Here, we check if a dpad key is down, and send the corresponding analogue signal.
     events[i].type  = EV_ABS;
     events[i].code  = ABS_HAT0X;
     if (HID_HAS_KEY(hid->keys.held | hid->keys.down, HID_KEY_DLEFT)) {
