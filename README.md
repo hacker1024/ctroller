@@ -102,10 +102,6 @@ L
 R
 ZL
 ZR
-UP
-DOWN
-LEFT
-RIGHT
 ```
 To modify it, copy the above into a file, and swap keys around. The order is very important; any key in your custom keymap will override the default one on the same line.
 
@@ -123,11 +119,6 @@ ZL
 ZR
 L
 R
-UP
-DOWN
-LEFT
-RIGHT
-
 ```
 
 ## Notes
