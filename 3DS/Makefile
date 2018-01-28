@@ -38,9 +38,9 @@ BANNER		:=	$(RESOURCES)/banner.png
 AUDIO		:=	$(RESOURCES)/audio.wav
 
 VERSION_STRING	:=	$(shell git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
-VERSION_MAJOR	:=	$(word 1,$(subst ., ,$(VERSION_STRING)))
-VERSION_MINOR	:=	$(word 2,$(subst ., ,$(VERSION_STRING)))
-VERSION_PATCH	:=	$(word 3,$(subst ., ,$(VERSION_STRING)))
+VERSION_MAJOR	:=	0
+VERSION_MINOR	:=	4
+VERSION_PATCH	:=	0
 
 APP_TITLE	:=	$(TARGET)
 APP_DESCRIPTION	:=	Use your 3DS as PC gamepad
