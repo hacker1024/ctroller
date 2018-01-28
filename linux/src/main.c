@@ -30,6 +30,7 @@
 
 #include "ctroller.h"
 #include "hid.h"
+#include "devices.h"
 
 void on_terminate(int signum)
 {
@@ -47,7 +48,7 @@ void print_usage(void)
 
     printf("<switches>:\n");
 #define print_opt(shortopt, longopt, desc)                                     \
-    printf("  -%-1s  --%-22s " desc, shortopt, longopt)
+    printf("  -%-1s  --%-34s " desc, shortopt, longopt)
 
     print_opt("d", "daemonize", "execute in background\n");
     print_opt("h", "help", "print this help text\n");
@@ -59,8 +60,46 @@ void print_usage(void)
               "uinput-device=<path>",
               "uinput character "
               "device (defaults to " UINPUT_DEFAULT_DEVICE ")\n");
+    print_opt("x",
+              "exclude=<device1>[,<device2>,...]",
+              "3DS devices that will not be provided to the system"
+              " (possible values are: gamepad, touchscreen, gyroscope or "
+              "accelerometer)\n");
     print_opt("v", "version", "prints ctroller version\n");
 #undef print_opt
+}
+
+static const struct device_name_to_id {
+    const char *name;
+    enum DEVICE_ID id;
+} dev_to_id[] = {
+    {"gamepad", DEVICE_GAMEPAD},
+    {"touchscreen", DEVICE_TOUCHSCREEN},
+    {"gyroscope", DEVICE_GYROSCOPE},
+    {"accelerometer", DEVICE_ACCELEROMETER},
+};
+
+static device_mask_t parse_device_mask(const char *device_list)
+{
+    device_mask_t mask  = 0;
+    const char *cur_dev = device_list;
+    const char *end;
+
+    do {
+        end = strchrnul(cur_dev, ',');
+
+        fprintf(
+            stderr, "parsing dev mask: %.*s\n", (int) (end - cur_dev), cur_dev);
+
+        for (size_t i = 0; i < arrsize(dev_to_id); i++) {
+            if (strncmp(dev_to_id[i].name, cur_dev, end - cur_dev) == 0) {
+                mask |= (1 << dev_to_id[i].id);
+            }
+        }
+        cur_dev = end + 1;
+    } while (*end != '\0');
+
+    return mask;
 }
 
 int main(int argc, char *argv[])
@@ -72,14 +111,16 @@ int main(int argc, char *argv[])
         char *uinput_device;
         char *port;
         int daemonize;
+        unsigned device_exclude_mask;
         char *keymap;
         int version;
     } options = {
-        .uinput_device = NULL,
-        .port          = NULL,
-        .daemonize     = 0,
-        .keymap        = NULL,
-        .version       = 0,
+        .uinput_device       = NULL,
+        .port                = NULL,
+        .daemonize           = 0,
+        .device_exclude_mask = 0,
+        .keymap              = NULL,
+        .version             = 0,
     };
 
     static const struct option optstrings[] = {
@@ -87,6 +128,7 @@ int main(int argc, char *argv[])
         {"help",            no_argument,       NULL, 'h'},
         {"port",            required_argument, NULL, 'p'},
         {"uinput-device",   required_argument, NULL, 'u'},
+        {"exclude",         required_argument, NULL, 'x'},
         {"keymap",          required_argument, NULL, 'k'},
         {"version",         no_argument,       NULL, 'v'},
         {NULL,              0,                 NULL, 0},
@@ -95,7 +137,7 @@ int main(int argc, char *argv[])
 
     int index = 0;
     int curopt;
-    while ((curopt = getopt_long(argc, argv, "dhp:u:k:v", optstrings, &index)) !=
+    while ((curopt = getopt_long(argc, argv, "dhp:u:x:k:v", optstrings, &index)) !=
            -1) {
         switch (curopt) {
         case 0:
@@ -112,6 +154,9 @@ int main(int argc, char *argv[])
         case 'u':
             options.uinput_device = optarg;
             printf("uinput device: %s\n", optarg);
+            break;
+        case 'x':
+            options.device_exclude_mask = parse_device_mask(optarg);
             break;
         case 'k':
             options.keymap = optarg;
@@ -141,7 +186,9 @@ int main(int argc, char *argv[])
     // If the keymap file is specified, load it.
     if(options.keymap != NULL) load_keymap(options.keymap);
     
-    if (ctroller_init(options.uinput_device, options.port) == -1) {
+    if (ctroller_init(options.uinput_device,
+                      options.port,
+                      ~options.device_exclude_mask) == -1) {
         perror("Error initializing ctroller");
         exit(EXIT_FAILURE);
     }
