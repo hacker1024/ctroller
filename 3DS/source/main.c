@@ -78,18 +78,14 @@ int main(int argc, char **argv)
         util_presult("socInit failed", res);
         goto soc_failure;
     }
-
+    
     u32 wifi = 0;
-    if (R_FAILED(res = ACU_GetWifiStatus(&wifi))) {
-        util_presult("ACU_GetWifiStatus failed", res);
-        fprintf(stderr, "Did you enable Wifi?\n");
-        goto failure;
-    }
-    if (!wifi) {
+    ACU_GetWifiStatus(&wifi);
+    if (wifi == 0) {
         fprintf(stderr, "Wifi disabled.\n");
         goto failure;
     }
-
+    
     if (R_FAILED(res = hidInit())) {
         util_presult("hidInit failed", res);
         goto hid_failure;
