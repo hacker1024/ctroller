@@ -27,8 +27,9 @@ include $(DEVKITARM)/3ds_rules
 #     - icon.png
 #     - <libctru folder>/default_icon.png
 #---------------------------------------------------------------------------------
-TARGET		:=	ctroller
-BUILD		:=  build
+TARGET		:=	ctroller-android
+TARGET_VALID_PC :=      ctrollerandroid
+BUILD		:=      build
 SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
@@ -39,12 +40,12 @@ AUDIO		:=	$(RESOURCES)/audio.wav
 
 VERSION_STRING	:=	$(shell git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
 VERSION_MAJOR	:=	0
-VERSION_MINOR	:=	4
+VERSION_MINOR	:=	1
 VERSION_PATCH	:=	0
 
 APP_TITLE	:=	$(TARGET)
-APP_DESCRIPTION	:=	Use your 3DS as PC gamepad
-APP_AUTHOR	:=	phijor
+APP_DESCRIPTION	:=	Use your 3DS as android gamepad
+APP_AUTHOR	:=	hacker1024\ \(superl2\)
 APP_INFO	:=	$(RESOURCES)/AppInfo.rsf
 
 DSHOSTNAME	:= n3ds

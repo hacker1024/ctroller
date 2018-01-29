@@ -1,11 +1,11 @@
 BasicInfo:
   Title                   : $(APP_TITLE)
-  ProductCode             : CTR-HB-$(APP_TITLE)
+  ProductCode             : CTR-HB-$(TARGET_VALID_PC)
   Logo                    : Nintendo # Nintendo / Licensed / Distributed / iQue / iQueForSystem
 
 TitleInfo:
   Category                : Application
-  UniqueId                : 0xF3D5C
+  UniqueId                : 0xF3D5D
 
 Option:
   UseOnSD                 : true # true if App is to be installed to SD
