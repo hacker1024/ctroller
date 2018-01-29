@@ -44,7 +44,7 @@ Result ctrollerInit(void)
         return MAKERESULT(RL_USAGE, RS_NOTFOUND, RM_APPLICATION, RD_NOT_FOUND);
     }
 
-    util_debug_printf("Initializing ctroller...\n"
+    util_debug_printf("Initializing ctroller-android...\n"
                       "- Version: " VERSION_BUILD " (" __DATE__ ")\n"
                       "- Config:  " CFG_FILE "\n"
                       "- Client:  %s\n"
