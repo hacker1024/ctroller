@@ -45,7 +45,7 @@
 
 /** Location of the config file on the SD card
  **/
-#define CFG_FILE CFG_DIR "ctroller.cfg"
+#define CFG_FILE CFG_DIR "ctroller-android.cfg"
 
 /** Port of the server to connect to.
  **/
